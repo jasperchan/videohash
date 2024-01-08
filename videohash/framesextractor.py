@@ -29,7 +29,8 @@ class FramesExtractor:
         output_dir: str,
         interval: Union[int, float] = 1,
         ffmpeg_path: Optional[str] = None,
-        threads: Optional[int] = None
+        threads: Optional[int] = None,
+        duration: Optional[int] = None
     ) -> None:
         """
         Raises Exeception if video_path does not exists.
@@ -58,6 +59,7 @@ class FramesExtractor:
         self.interval = interval
         self.ffmpeg_path = ""
         self.threads_param = f"-threads {threads}" if threads else ""
+        self.duration_param = f"-t {duration}" if duration else ""
         if ffmpeg_path:
             self.ffmpeg_path = ffmpeg_path
 
@@ -208,6 +210,8 @@ class FramesExtractor:
             + f'"{video_path}"'
             + f"{crop}"
             + " -s 144x144 "
+            + " "
+            + self.duration_param
             + " -r "
             + str(self.interval)
             + " "

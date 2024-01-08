@@ -38,7 +38,8 @@ class VideoHash:
         storage_path: Optional[str] = None,
         download_worst: bool = False,
         frame_interval: Union[int, float] = 1,
-        ffmpeg_threads: Optional[int] = None
+        ffmpeg_threads: Optional[int] = None,
+        ffmpeg_duration: Optional[int] = None
     ) -> None:
         """
         :param path: Absolute path of the input video file.
@@ -78,6 +79,7 @@ class VideoHash:
         self.download_worst = download_worst
         self.frame_interval = frame_interval
         self.ffmpeg_threads = ffmpeg_threads
+        self.ffmpeg_duration = ffmpeg_duration
 
         self.task_uid = VideoHash._get_task_uid()
 
@@ -85,7 +87,7 @@ class VideoHash:
 
         self._copy_video_to_video_dir()
 
-        FramesExtractor(self.video_path, self.frames_dir, interval=self.frame_interval, threads=self.ffmpeg_threads)
+        FramesExtractor(self.video_path, self.frames_dir, interval=self.frame_interval, threads=self.ffmpeg_threads, duration=self.ffmpeg_duration)
 
         self.collage_path = os.path.join(self.collage_dir, "collage.jpg")
 
