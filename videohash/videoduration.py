@@ -31,7 +31,7 @@ def video_duration(video_path: str, ffmpeg_path: Optional[str] = None) -> float:
 
     match = re.search(
         r"Duration\:(\s\d?\d\d\:\d\d\:\d\d\.\d\d)\,",
-        (output.decode() + error.decode()),
+        (output.decode(errors='ignore') + error.decode(errors='ignore')),
     )
 
     if match:

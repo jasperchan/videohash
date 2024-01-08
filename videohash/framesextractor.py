@@ -163,7 +163,7 @@ class FramesExtractor:
 
             matches = re.findall(
                 r"crop\=[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}",
-                (output.decode() + error.decode()),
+                (output.decode(errors='ignore') + error.decode(errors='ignore')),
             )
 
             for match in matches:
@@ -224,8 +224,8 @@ class FramesExtractor:
         process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
         output, error = process.communicate()
 
-        ffmpeg_output = output.decode()
-        ffmpeg_error = error.decode()
+        ffmpeg_output = output.decode(errors='ignore')
+        ffmpeg_error = error.decode(errors='ignore')
 
         if len(os.listdir(self.output_dir)) == 0:
 
