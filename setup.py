@@ -39,7 +39,6 @@ setup(
     install_requires=[
         "Pillow",
         "ImageHash",
-        "imagedominantcolor",
         "yt-dlp",
     ],
     python_requires=">=3.6",
