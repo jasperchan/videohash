@@ -57,7 +57,7 @@ class FramesExtractor:
         self.output_dir = output_dir
         self.interval = interval
         self.ffmpeg_path = ""
-        self.threads = threads
+        self.threads_param = f"-threads {threads}" if threads else ""
         if ffmpeg_path:
             self.ffmpeg_path = ffmpeg_path
 
@@ -117,6 +117,7 @@ class FramesExtractor:
         video_path: Optional[str] = None,
         frames: int = 3,
         ffmpeg_path: Optional[str] = None,
+        threads_param: Optional[str] = ""
     ) -> str:
         """
         Detects the the amount of cropping to remove black bars.
@@ -152,7 +153,7 @@ class FramesExtractor:
 
         for start_time in time_start_list:
 
-            command = f'"{ffmpeg_path}" -ss {start_time} -i "{video_path}" -vframes {frames} -vf cropdetect -f null -'
+            command = f'"{ffmpeg_path}" {threads_param} -ss {start_time} -i "{video_path}" -vframes {frames} -vf cropdetect -f null -'
 
             process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
 
@@ -196,12 +197,13 @@ class FramesExtractor:
             output_dir = shlex.quote(self.output_dir)
 
         crop = FramesExtractor.detect_crop(
-            video_path=video_path, frames=3, ffmpeg_path=ffmpeg_path
+            video_path=video_path, frames=3, ffmpeg_path=ffmpeg_path, threads_param=self.threads_param
         )
 
         command = (
             f'"{ffmpeg_path}"'
-            + (f' -threads {self.threads}' if self.threads else "")
+            + " "
+            + self.threads_param
             + " -i "
             + f'"{video_path}"'
             + f"{crop}"
