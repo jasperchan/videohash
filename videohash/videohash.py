@@ -8,7 +8,7 @@ from typing import List, Optional, Union
 
 import imagehash
 import numpy as np
-from imagedominantcolor import DominantColor
+from dominantcolor import DominantColor
 from PIL import Image
 
 from .collagemaker import MakeCollage
@@ -38,6 +38,7 @@ class VideoHash:
         storage_path: Optional[str] = None,
         download_worst: bool = False,
         frame_interval: Union[int, float] = 1,
+        ffmpeg_threads: Optional[int] = None
     ) -> None:
         """
         :param path: Absolute path of the input video file.
@@ -76,6 +77,7 @@ class VideoHash:
         self._storage_path = self.storage_path
         self.download_worst = download_worst
         self.frame_interval = frame_interval
+        self.ffmpeg_threads = ffmpeg_threads
 
         self.task_uid = VideoHash._get_task_uid()
 
@@ -83,7 +85,7 @@ class VideoHash:
 
         self._copy_video_to_video_dir()
 
-        FramesExtractor(self.video_path, self.frames_dir, interval=self.frame_interval)
+        FramesExtractor(self.video_path, self.frames_dir, interval=self.frame_interval, threads=self.ffmpeg_threads)
 
         self.collage_path = os.path.join(self.collage_dir, "collage.jpg")
 

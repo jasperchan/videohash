@@ -29,6 +29,7 @@ class FramesExtractor:
         output_dir: str,
         interval: Union[int, float] = 1,
         ffmpeg_path: Optional[str] = None,
+        threads: Optional[int] = None
     ) -> None:
         """
         Raises Exeception if video_path does not exists.
@@ -56,6 +57,7 @@ class FramesExtractor:
         self.output_dir = output_dir
         self.interval = interval
         self.ffmpeg_path = ""
+        self.threads = threads
         if ffmpeg_path:
             self.ffmpeg_path = ffmpeg_path
 
@@ -210,6 +212,7 @@ class FramesExtractor:
             + output_dir
             + "video_frame_%07d.jpeg"
             + '"'
+            + (f' -threads {self.threads}' if self.threads else "")
         )
 
         process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
