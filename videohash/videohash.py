@@ -8,7 +8,7 @@ from typing import List, Optional, Union
 
 import imagehash
 import numpy as np
-from dominantcolor import DominantColor
+from .dominantcolor import DominantColor
 from PIL import Image
 
 from .collagemaker import MakeCollage
