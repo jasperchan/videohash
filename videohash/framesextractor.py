@@ -201,6 +201,7 @@ class FramesExtractor:
 
         command = (
             f'"{ffmpeg_path}"'
+            + (f' -threads {self.threads}' if self.threads else "")
             + " -i "
             + f'"{video_path}"'
             + f"{crop}"
@@ -212,7 +213,6 @@ class FramesExtractor:
             + output_dir
             + "video_frame_%07d.jpeg"
             + '"'
-            + (f' -threads {self.threads}' if self.threads else "")
         )
 
         process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
