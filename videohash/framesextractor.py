@@ -155,7 +155,7 @@ class FramesExtractor:
 
         for start_time in time_start_list:
 
-            command = f'"{ffmpeg_path}" {threads_param} -ss {start_time} -i "{video_path}" -vframes {frames} -vf cropdetect -f null -'
+            command = f'{ffmpeg_path} {threads_param} -ss {start_time} -i {video_path} -vframes {frames} -vf cropdetect -f null -'
 
             process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
 
@@ -203,11 +203,11 @@ class FramesExtractor:
         )
 
         command = (
-            f'"{ffmpeg_path}"'
+            ffmpeg_path
             + " "
             + self.threads_param
             + " -i "
-            + f'"{video_path}"'
+            + video_path
             + f"{crop}"
             + " -s 144x144 "
             + " "

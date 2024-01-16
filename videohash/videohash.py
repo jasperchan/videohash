@@ -39,7 +39,8 @@ class VideoHash:
         download_worst: bool = False,
         frame_interval: Union[int, float] = 1,
         ffmpeg_threads: Optional[int] = None,
-        ffmpeg_duration: Optional[int] = None
+        ffmpeg_duration: Optional[int] = None,
+        copy_file: Optional[bool] = True
     ) -> None:
         """
         :param path: Absolute path of the input video file.
@@ -85,7 +86,10 @@ class VideoHash:
 
         self._create_required_dirs_and_check_for_errors()
 
-        self._copy_video_to_video_dir()
+        if copy_file:
+            self._copy_video_to_video_dir()
+        else:
+            self.video_path = os.path.abspath(self.path)
 
         FramesExtractor(self.video_path, self.frames_dir, interval=self.frame_interval, threads=self.ffmpeg_threads, duration=self.ffmpeg_duration)
 
