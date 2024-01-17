@@ -1,7 +1,7 @@
 import re
 import os
 from shutil import which
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, run
 from typing import Optional
 import shlex
 
@@ -27,22 +27,20 @@ def video_duration(video_path: str, ffmpeg_path: Optional[str] = None) -> float:
     if not ffmpeg_path:
         ffmpeg_path = str(which("ffmpeg"))
 
-    if os.name == "posix":
-        ffmpeg_path = shlex.quote(ffmpeg_path)
-        video_path = shlex.quote(video_path)
-
-    command = f'{ffmpeg_path} -i {video_path}'
-    process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
-    output, error = process.communicate()
+    command = [
+        ffmpeg_path,
+        '-i', video_path
+    ]
+    output = run(command, capture_output=True)
 
     match = re.search(
         r"Duration\:(\s\d?\d\d\:\d\d\:\d\d\.\d\d)\,",
-        (output.decode(errors='ignore') + error.decode(errors='ignore')),
+        (output.stdout.decode(errors='ignore') + output.stderr.decode(errors='ignore')),
     )
 
     if match:
         duration_string = match.group(1)
-
-    hours, minutes, seconds = duration_string.strip().split(":")
-
-    return float(hours) * 60.00 * 60.00 + float(minutes) * 60.00 + float(seconds)
+        hours, minutes, seconds = duration_string.strip().split(":")
+        return float(hours) * 60.00 * 60.00 + float(minutes) * 60.00 + float(seconds)
+    else:
+        return None
