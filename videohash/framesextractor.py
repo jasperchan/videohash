@@ -4,6 +4,8 @@ import shlex
 from shutil import which
 from subprocess import PIPE, Popen, check_output, run
 from typing import Optional, Union
+from .videoduration import video_duration
+from collections import Counter
 
 from .exceptions import (
     FFmpegError,
@@ -151,6 +153,11 @@ class FramesExtractor:
             14400,
         ]
 
+        # reduce list by duration
+        duration = video_duration(video_path)
+        if duration:
+            time_start_list = [d for d in time_start_list if d < duration]
+
         crop_list = []
 
         for start_time in time_start_list:
@@ -174,13 +181,9 @@ class FramesExtractor:
             for match in matches:
                 crop_list.append(match)
 
-        mode = None
-        if len(crop_list) > 0:
-            mode = max(crop_list, key=crop_list.count)
-
         crop = []
-        if mode:
-            crop = ['-vf', str(mode)]
+        if crop_list:
+            crop = ['-vf', str(Counter(crop_list).most_common()[0][0])]
 
         return crop
 
