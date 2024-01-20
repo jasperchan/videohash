@@ -171,11 +171,16 @@ class FramesExtractor:
                 '-vf', 'cropdetect',
                 '-f', 'null', '-'
             ]
-            output = run(command, capture_output=True)
+
+            try:
+                output = run(command, capture_output=True, timeout=10)
+                crop_output = (output.stdout.decode(errors='ignore') + output.stderr.decode(errors='ignore'))
+            except TimeoutExpired as e:
+                crop_output = (str(e.stdout) + str(e.stderr))
 
             matches = re.findall(
                 r"crop\=[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}",
-                (output.stdout.decode(errors='ignore') + output.stderr.decode(errors='ignore')),
+                crop_output
             )
 
             for match in matches:
