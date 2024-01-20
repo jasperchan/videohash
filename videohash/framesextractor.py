@@ -178,8 +178,10 @@ class FramesExtractor:
             except TimeoutExpired as e:
                 crop_output = (str(e.stdout) + str(e.stderr))
 
+            # crop detect is kinda wonky because some files don't seem to seek properly
+            # we filter for crops that only impact top & bottom
             matches = re.findall(
-                r"crop\=[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}:[0-9]{1,4}",
+                r"crop\=[0-9]{1,4}:[0-9]{1,4}:0:[0-9]{1,4}",
                 crop_output
             )
 
