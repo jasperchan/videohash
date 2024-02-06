@@ -2,7 +2,7 @@ import os
 import re
 import shlex
 from shutil import which
-from subprocess import PIPE, Popen, check_output, run
+from subprocess import PIPE, Popen, check_output, run, TimeoutExpired
 from typing import Optional, Union
 from .videoduration import video_duration
 from collections import Counter
